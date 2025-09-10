@@ -1724,6 +1724,16 @@ const MENU_DATA = [
   },
   {
     "menu_type": "Food",
+    "name": "The Smokehouse Platter for 1",
+    "description": "",
+    "price": 38.0,
+    "category": "The Smokehouse > SMOKEHOUSE PLATTER",
+    "calories": "5526",
+    "dietary_info": "",
+    "image_url": ""
+  },
+  {
+    "menu_type": "Food",
     "name": "Cornbread & Maple Butter",
     "description": "",
     "price": 4.5,

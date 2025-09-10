@@ -73,6 +73,80 @@ body {
     margin-right: 10px;
 }
 
+/* Order Summary */
+.order-summary {
+    background: var(--white);
+    border-radius: var(--border-radius);
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: var(--box-shadow);
+    border: 2px solid var(--primary-color);
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.summary-row:last-child {
+    border-bottom: none;
+}
+
+.summary-label {
+    font-weight: 500;
+    color: var(--gray-700);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.summary-amount {
+    font-weight: 600;
+    color: var(--dark-color);
+    font-size: 1.1rem;
+}
+
+.service-fee-row .summary-label {
+    color: var(--secondary-color);
+}
+
+.total-row {
+    border-top: 2px solid var(--primary-color);
+    margin-top: 10px;
+    padding-top: 15px;
+}
+
+.total-row .summary-label {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.total-amount {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.fee-input {
+    width: 60px;
+    padding: 4px 8px;
+    border: 1px solid var(--gray-300);
+    border-radius: 4px;
+    text-align: center;
+    font-size: 0.9rem;
+    background: var(--white);
+}
+
+.fee-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(139, 69, 19, 0.1);
+}
+
 /* Summary Cards */
 .summary-cards {
     display: grid;
@@ -418,23 +492,52 @@ body {
 }
 
 /* Person Total */
+.person-totals {
+    background: var(--gray-100);
+    border-radius: var(--border-radius);
+    padding: 15px;
+    margin-top: 15px;
+}
+
+.person-subtotal,
+.person-service-fee,
 .person-total {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px;
-    background: linear-gradient(135deg, var(--success-color) 0%, #20c997 100%);
-    border-radius: var(--border-radius);
-    color: var(--white);
+    padding: 8px 0;
+}
+
+.person-subtotal {
+    border-bottom: 1px solid var(--gray-300);
+}
+
+.person-service-fee {
+    border-bottom: 1px solid var(--gray-300);
+    color: var(--secondary-color);
+}
+
+.person-total {
+    border-top: 2px solid var(--primary-color);
+    margin-top: 8px;
+    padding-top: 12px;
+    font-weight: 600;
+    color: var(--primary-color);
 }
 
 .total-label {
     font-weight: 500;
 }
 
-.total-amount {
-    font-size: 1.4rem;
+.person-subtotal-amount,
+.person-service-fee-amount {
+    font-weight: 600;
+}
+
+.person-total-amount {
+    font-size: 1.2rem;
     font-weight: 700;
+    color: var(--primary-color);
 }
 
 /* Menu Browser */

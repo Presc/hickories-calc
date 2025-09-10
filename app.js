@@ -8,8 +8,6 @@ class MenuCalculator {
 
     init() {
         this.setupEventListeners();
-        this.loadCategories();
-        this.loadMenuBrowser();
         this.updateSummary();
     }
 
@@ -24,29 +22,13 @@ class MenuCalculator {
             this.clearAll();
         });
 
-        // Menu filters
-        document.getElementById('menu-type-filter').addEventListener('change', () => {
-            this.filterMenuItems();
-        });
-
-        document.getElementById('category-filter').addEventListener('change', () => {
-            this.filterMenuItems();
-        });
-
-        document.getElementById('search-filter').addEventListener('input', () => {
-            this.filterMenuItems();
+        // Service fee input
+        document.getElementById('service-percentage').addEventListener('input', () => {
+            this.people.forEach(person => this.updatePersonTotal(person));
+            this.updateSummary();
         });
     }
 
-    loadCategories() {
-        const categoryFilter = document.getElementById('category-filter');
-        CATEGORIES.forEach(category => {
-            const option = document.createElement('option');
-            option.value = category;
-            option.textContent = category;
-            categoryFilter.appendChild(option);
-        });
-    }
 
     addPerson(name = '') {
         const personId = this.nextPersonId++;
@@ -74,22 +56,33 @@ class MenuCalculator {
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <div class="person-items">
-                <div class="item-selector">
-                    <div class="item-input-container">
-                        <input type="text" class="item-search-input" placeholder="Type to search and add items..." autocomplete="off">
-                        <div class="search-results" id="search-results-${person.id}" style="display: none;">
-                            <!-- Search results will appear here -->
-                        </div>
-                    </div>
-                    <div class="selected-items" id="selected-items-${person.id}">
-                        <!-- Selected items will appear here -->
+            <div class="search-container">
+                <div class="item-input-container">
+                    <input type="text" class="item-search-input" placeholder="Type to search and add items..." autocomplete="off">
+                    <div class="search-results" id="search-results-${person.id}" style="display: none;">
+                        <!-- Search results will appear here -->
                     </div>
                 </div>
             </div>
-            <div class="person-total">
-                <span class="total-label">Total:</span>
-                <span class="total-amount" id="total-${person.id}">£0.00</span>
+            <div class="person-items-list">
+                <div class="items-header">Items Ordered:</div>
+                <div class="selected-items" id="selected-items-${person.id}">
+                    <div class="no-items">No items added yet</div>
+                </div>
+            </div>
+            <div class="person-totals">
+                <div class="person-subtotal">
+                    <span class="total-label">Subtotal:</span>
+                    <span class="person-subtotal-amount" id="subtotal-${person.id}">£0.00</span>
+                </div>
+                <div class="person-service-fee">
+                    <span class="total-label">Service Fee:</span>
+                    <span class="person-service-fee-amount" id="service-fee-${person.id}">£0.00</span>
+                </div>
+                <div class="person-total">
+                    <span class="total-label">Total:</span>
+                    <span class="person-total-amount" id="total-${person.id}">£0.00</span>
+                </div>
             </div>
         `;
 
@@ -320,17 +313,20 @@ class MenuCalculator {
         const container = document.getElementById(`selected-items-${person.id}`);
         
         if (person.selectedItems.length === 0) {
-            container.innerHTML = '<p class="no-items">No items selected</p>';
+            container.innerHTML = '<div class="no-items">No items added yet</div>';
             return;
         }
 
         container.innerHTML = person.selectedItems
-            .map(item => `
-                <div class="selected-item">
-                    <span class="item-name">${item.name}</span>
-                    <span class="item-price">£${item.price.toFixed(2)}</span>
-                    <button class="remove-item-btn" onclick="app.removeItemFromPerson(${person.id}, '${item.name.replace(/'/g, "\\'")}')">
-                        <i class="fas fa-times"></i>
+            .map((item, index) => `
+                <div class="item-row">
+                    <span class="item-number">${index + 1}.</span>
+                    <span class="item-details">
+                        <span class="item-name">${item.name}</span>
+                        <span class="item-price">£${item.price.toFixed(2)}</span>
+                    </span>
+                    <button class="remove-item-btn" onclick="app.removeItemFromPerson(${person.id}, '${item.name.replace(/'/g, "\\'")}')" title="Remove item">
+                        ×
                     </button>
                 </div>
             `)
@@ -350,8 +346,16 @@ class MenuCalculator {
     }
 
     updatePersonTotal(person) {
-        person.total = person.selectedItems.reduce((sum, item) => sum + item.price, 0);
-        document.getElementById(`total-${person.id}`).textContent = `£${person.total.toFixed(2)}`;
+        const subtotal = person.selectedItems.reduce((sum, item) => sum + item.price, 0);
+        const servicePercentage = parseFloat(document.getElementById('service-percentage').value) || 0;
+        const serviceFee = subtotal * (servicePercentage / 100);
+        const total = subtotal + serviceFee;
+
+        person.total = subtotal;
+        
+        document.getElementById(`subtotal-${person.id}`).textContent = `£${subtotal.toFixed(2)}`;
+        document.getElementById(`service-fee-${person.id}`).textContent = `£${serviceFee.toFixed(2)}`;
+        document.getElementById(`total-${person.id}`).textContent = `£${total.toFixed(2)}`;
     }
 
     removePerson(personId) {
@@ -369,13 +373,14 @@ class MenuCalculator {
     }
 
     updateSummary() {
-        const totalPeople = this.people.length;
-        const totalCost = this.people.reduce((sum, person) => sum + person.total, 0);
-        const averageCost = totalPeople > 0 ? totalCost / totalPeople : 0;
+        const subtotal = this.people.reduce((sum, person) => sum + person.total, 0);
+        const servicePercentage = parseFloat(document.getElementById('service-percentage').value) || 0;
+        const serviceFee = subtotal * (servicePercentage / 100);
+        const finalTotal = subtotal + serviceFee;
 
-        document.getElementById('total-people').textContent = totalPeople;
-        document.getElementById('total-cost').textContent = `£${totalCost.toFixed(2)}`;
-        document.getElementById('average-cost').textContent = `£${averageCost.toFixed(2)}`;
+        document.getElementById('subtotal').textContent = `£${subtotal.toFixed(2)}`;
+        document.getElementById('service-fee').textContent = `£${serviceFee.toFixed(2)}`;
+        document.getElementById('final-total').textContent = `£${finalTotal.toFixed(2)}`;
     }
 
     loadMenuBrowser() {
@@ -518,5 +523,7 @@ class MenuCalculator {
 // Initialize the app
 const app = new MenuCalculator();
 
-// Start with clean interface - no demo people
-// Users can add people as needed
+// Start with 3 initial people
+app.addPerson('Person 1');
+app.addPerson('Person 2');
+app.addPerson('Person 3');

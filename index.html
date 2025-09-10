@@ -15,27 +15,21 @@
             <p>Plan your group order with ease!</p>
         </header>
 
-        <div class="summary-cards">
-            <div class="summary-card">
-                <div class="summary-icon"><i class="fas fa-users"></i></div>
-                <div class="summary-content">
-                    <div class="summary-number" id="total-people">0</div>
-                    <div class="summary-label">People</div>
-                </div>
+        <div class="order-summary">
+            <div class="summary-row">
+                <span class="summary-label">Subtotal:</span>
+                <span class="summary-amount" id="subtotal">£0.00</span>
             </div>
-            <div class="summary-card">
-                <div class="summary-icon"><i class="fas fa-pound-sign"></i></div>
-                <div class="summary-content">
-                    <div class="summary-number" id="total-cost">£0.00</div>
-                    <div class="summary-label">Total Cost</div>
-                </div>
+            <div class="summary-row service-fee-row">
+                <span class="summary-label">
+                    Service Fee: 
+                    <input type="number" id="service-percentage" value="12.5" min="0" max="25" step="0.5" class="fee-input">%
+                </span>
+                <span class="summary-amount" id="service-fee">£0.00</span>
             </div>
-            <div class="summary-card">
-                <div class="summary-icon"><i class="fas fa-calculator"></i></div>
-                <div class="summary-content">
-                    <div class="summary-number" id="average-cost">£0.00</div>
-                    <div class="summary-label">Average per Person</div>
-                </div>
+            <div class="summary-row total-row">
+                <span class="summary-label">Total:</span>
+                <span class="summary-amount total-amount" id="final-total">£0.00</span>
             </div>
         </div>
 
@@ -52,27 +46,9 @@
             <!-- Dynamic person cards will be inserted here -->
         </div>
 
-        <div class="menu-browser">
-            <h3><i class="fas fa-search"></i> Browse Menu</h3>
-            <div class="menu-filters">
-                <select id="menu-type-filter" class="filter-select">
-                    <option value="">All Menu Types</option>
-                    <option value="Food">Food</option>
-                    <option value="Drinks">Drinks</option>
-                </select>
-                <select id="category-filter" class="filter-select">
-                    <option value="">All Categories</option>
-                </select>
-                <input type="text" id="search-filter" placeholder="Search menu items..." class="search-input">
-            </div>
-            <div class="menu-items" id="menu-items">
-                <!-- Menu items will be loaded here -->
-            </div>
-        </div>
 
         <footer class="footer">
             <p>Data scraped from <a href="https://hickorys.co.uk/menus/" target="_blank">Hickory's Smokehouse</a></p>
-            <p>Built with ❤️ for group dining planning</p>
         </footer>
     </div>
 
